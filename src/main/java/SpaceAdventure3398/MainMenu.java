@@ -1,26 +1,27 @@
 /*
-Author: Tanner Coker
+Author: Brice Ashburn
 
 This is a class that displays that main menu for the game SpaceAdventure 3398
 */
+package SpaceAdventure3398;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.imageio.ImageIO;
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
 
 public class MainMenu extends JPanel implements ActionListener
 {
-  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  int width = screenSize.width;
-  int height = screenSize.height;
+  final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+  final int width = screenSize.width;
+  final int height = screenSize.height;
   private BufferedImage title, background;//title image and static background image
-  private ImageIcon play, score, settings, about, exit;//image icons for the buttons
+  private final ImageIcon play, score, settings, about, exit;//image icons for the buttons
   private JButton playButton, scoreButton, settingsButton, aboutButton, exitButton;//menu buttons that change screens
   //JButton[] buttons = {playButton,scoreButton,settingsButton,aboutButton,exitButton};
-  private ScreenManager manager;//this is who manages the the menu
+  private final ScreenManager manager;//this is who manages the the menu
 
   public MainMenu(ScreenManager manager)
   {
@@ -29,20 +30,20 @@ public class MainMenu extends JPanel implements ActionListener
     //assigns the buffered image for title picture and background
     try
     {
-      title = ImageIO.read(new File("src/main/java/SpaceAdventure3398/images/Title.png"));
-      background = ImageIO.read(new File("src/main/java/SpaceAdventure3398/images/stillBackground.png"));
+      title = ImageIO.read(getClass().getResource("/images/Title.png"));
+      background = ImageIO.read(getClass().getResource("/images/stillBackground.png"));
     }
-    catch(Exception e)
+    catch(IOException e)
     {
       System.out.println("title image not pulled");
     }
 
     //assigns the pics for the buttons to use
-    play = new ImageIcon("src/main/java/SpaceAdventure3398/images/Play.png");
-    score = new ImageIcon("src/main/java/SpaceAdventure3398/images/Scoreboard.png");
-    settings = new ImageIcon("src/main/java/SpaceAdventure3398/images/Settings.png");
-    about = new ImageIcon("src/main/java/SpaceAdventure3398/images/About.png");
-    exit = new ImageIcon("src/main/java/SpaceAdventure3398/images/Exit.png");
+    play = new ImageIcon(getClass().getResource("/images/Play.png"));
+    score = new ImageIcon(getClass().getResource("/images/Scoreboard.png"));
+    settings = new ImageIcon(getClass().getResource("/images/Settings.png"));
+    about = new ImageIcon(getClass().getResource("/images/About.png"));
+    exit = new ImageIcon(getClass().getResource("/images/Exit.png"));
 
     //sets no layout for the mainmenu
     this.setLayout(null);

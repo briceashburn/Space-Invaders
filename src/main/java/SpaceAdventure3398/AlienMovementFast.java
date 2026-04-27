@@ -1,6 +1,8 @@
 
 
 
+package SpaceAdventure3398;
+
 public class AlienMovementFast implements AlienMovementType 
 {
 	public int move(int speedX, int direction) 

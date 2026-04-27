@@ -1,5 +1,5 @@
 /*
- * Author: Tanner Coker
+ * Author: Brice Ashburn
  * 
  * Planets class is a class that will display larger green circles (planets) on the background class.
  * They will move downward across the screen constantly so that it simulates movement in space.
@@ -9,20 +9,23 @@
  * smaller ones in order to create a sense of depth and movement.
  */
 
+package SpaceAdventure3398;
+
 import java.awt.*;
-import java.util.*;
-import javax.swing.*;
 
 public class Planets extends Rectangle implements SpaceBodies
 {
 	private int posX, posY, size, spd, BgWidth;
+	private final int BgHeight;
 
 	//constructs the planet with speed based off of size
 	public Planets()
 	{
-		BgWidth = 1936;
-		posX = (int)(Math.random()*1936);
-		posY = (int)(Math.random()*2500);
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		BgWidth = screen.width;
+		BgHeight = screen.height + 1000; // extra range for initial spread below screen
+		posX = (int)(Math.random()*BgWidth);
+		posY = (int)(Math.random()*BgHeight);
 		size = (int)(Math.random()*10+20);
 		if(size < 23)
 			spd = (int)(Math.random()*1+5);
@@ -36,11 +39,12 @@ public class Planets extends Rectangle implements SpaceBodies
 	//updates the position of the planet to make it move down. Once it reaches the lowest it can go
 	//it will be move between y= -10000->-5000 on the panel and be given a different size and a speed
 	//based off of that
+	@Override
 	public void update()
 	{
-		if(posY >= 2500)
+		if(posY >= BgHeight)
 		{
-			posX = (int)(Math.random()*1936);
+			posX = (int)(Math.random()*BgWidth);
 			posY = (int)(Math.random()*5000+5000)*(-1);
 			size = (int)(Math.random()*10+20);
 			if(size < 23)
@@ -55,12 +59,14 @@ public class Planets extends Rectangle implements SpaceBodies
 	}
 	
 	//sets the width of the background/frame that it is on to set an upper bound on which the planets spawn
+	@Override
 	public void setFrameWidth(int w)
 	{
 		BgWidth = w;
 	}
 	
 	//draws 3 rectangles to make the planet look like a circle
+	@Override
 	public void draw(Graphics g)
 	{
 		g.setColor(new Color(0,153,0));

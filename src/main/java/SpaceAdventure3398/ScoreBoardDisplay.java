@@ -1,41 +1,38 @@
 /*
-  Author: Tanner Coker
+  Author: Brice Ashburn
 
   This class is intended to display the current contents of the scoreboard for the game
 */
+
+package SpaceAdventure3398;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.imageio.ImageIO;
-import java.util.*;
-import java.io.*;
-
-import java.awt.GradientPaint;
-import java.awt.Color;
 
 public class ScoreBoardDisplay extends JPanel implements ActionListener
 {
-  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  int width = screenSize.width;
-  int height = screenSize.height;
+  final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+  final int width = screenSize.width;
+  final int height = screenSize.height;
   private BufferedImage background, panelTitle;
   private JButton back;//back button to return to menu
-  private ScreenManager manager;//screen manager
+  private final ScreenManager manager;//screen manager
   ImageIcon backPic;
   private Scoreboard scoreboard;
 
   public ScoreBoardDisplay(ScreenManager manager)
   {
     this.manager = manager;
-	  this.backPic = new ImageIcon("src/main/java/SpaceAdventure3398/images/Back.png");
+	  this.backPic = new ImageIcon(getClass().getResource("/images/Back.png"));
 
     //gets static background image
     try
     {
-      background = ImageIO.read(new File("src/main/java/SpaceAdventure3398/images/stillBackground.png"));
-      panelTitle = ImageIO.read(new File("src/main/java/SpaceAdventure3398/images/Score_Board_Panel.png"));
+      background = ImageIO.read(getClass().getResource("/images/stillBackground.png"));
+      panelTitle = ImageIO.read(getClass().getResource("/images/Score_Board_Panel.png"));
     }
     catch(Exception e)
     {
@@ -89,9 +86,6 @@ public class ScoreBoardDisplay extends JPanel implements ActionListener
 	  scoreboard.readFile();
 	  String[] lines = scoreboard.getScores().split("\n");
 
-	  // TODO: determine the x and y coordinates dynamically
-	  // Determine the width of a line in order to center the score display
-	  int stringWidth = g.getFontMetrics().stringWidth(lines[0]);
 	  int x = 460; // width/2 - stringWidth/2;
 	  int y = 200;
 

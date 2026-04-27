@@ -1,35 +1,30 @@
 /*
-  Author: Tanner Coker
+  Author: Brice Ashburn
 
   This class will be running the game and it's various moving components such as the background, player, and enemies
 */
+package SpaceAdventure3398;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
 import javax.swing.*;
-import javax.imageio.ImageIO;
-import java.util.*;
-import java.io.IOException;
-import javax.swing.Timer;
 
 
 
 
 public class PlayRunner extends JPanel implements ActionListener
 {
-  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  int width = screenSize.width;
-  int height = screenSize.height;
+  final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+  final int width = screenSize.width;
+  final int height = screenSize.height;
   private JButton back,restart;//back button to return to the menu. restart to reset the game once it's over.
   ImageIcon backPic, playerPic, alienPic,restartPic;
-  private volatile boolean running;
-  private ScreenManager manager;
-  Background background = new Background();
+  private boolean running;
+  private final ScreenManager manager;
+  final Background background = new Background();
 
   Player playerShip;
-  Alien alienShip;
-  ArrayList<Projectile> b;;
-  EnemyManager aMan = new EnemyManager();
+  final EnemyManager aMan = new EnemyManager();
 
   int stage,stageDelay;
   boolean newStage;
@@ -37,32 +32,27 @@ public class PlayRunner extends JPanel implements ActionListener
 
   int difficulty;
 
-
-  Action leftAction;
-
   // variables used to move and maintain player ship position
   private int xDelta = 0;
-  private int keyPressCount = 0;
-  private Timer repaintTimer;
+  private final Timer gameLoop;
   private int xPos = width/2;
-  private int radius = 10;
+  private final int radius = 10;
 
   public PlayRunner(ScreenManager manager)
   {
     this.manager = manager;
-    backPic = new ImageIcon("./src/main/java/SpaceAdventure3398/images/Back.png");
-    restartPic = new ImageIcon("./src/main/java/SpaceAdventure3398/images/Restart.png");
-    playerPic = new ImageIcon("./src/main/java/SpaceAdventure3398/images/PlayerShip.png");
-    //alienPic = new ImageIcon("./src/main/java/SpaceAdventure3398/images/EnemyShip.png");
+    backPic = new ImageIcon(getClass().getResource("/images/Back.png"));
+    restartPic = new ImageIcon(getClass().getResource("/images/Restart.png"));
+    playerPic = new ImageIcon(getClass().getResource("/images/PlayerShip.png"));
 
     this.setLayout(null);
 
     this.add(background);//adds the animated background to game panel
+    background.giveFrameWidth(width);
     setButton();//adds the back button
 
     playerShip = new Player(width/2, (int)(height*0.80) );
     playerShip.setPicture(playerPic);
-    b = playerShip.getBullets();
 
 
 	/*************************************************************************/
@@ -90,38 +80,34 @@ public class PlayRunner extends JPanel implements ActionListener
     am.put("released.left", new MoveAction(0, false));
     am.put("released.right", new MoveAction(0, false));
 
-    repaintTimer = new Timer(40, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            xPos += xDelta;
-            if (xPos < 0) {
-                xPos = 0;
-            } else if (xPos + radius > getWidth()) {
-                xPos = getWidth() - radius;
-            }
-            repaint();
-        }
-    });
-    repaintTimer.setInitialDelay(0);
-    repaintTimer.setRepeats(true);
-    repaintTimer.setCoalesce(true);
 	/***************************************************************/
 
     stage = 0;
     stageDelay = 0;
     newStage = false;
 
-
     difficulty = manager.accessDifficultySetting();
     running = false;
-    UpdateBG ub = new UpdateBG(this);
-    ub.start();
+
+    gameLoop = new Timer(20, e -> {
+        if (running && xDelta != 0) {
+            xPos += xDelta;
+            if (xPos < 0) {
+                xPos = 0;
+            } else if (xPos + radius > getWidth()) {
+                xPos = getWidth() - radius;
+            }
+        }
+        update();
+    });
+    gameLoop.setInitialDelay(0);
+    gameLoop.start();
   }
 
 	public class MoveAction extends AbstractAction {
 
-		private int direction;
-		private boolean keyDown;
+		private final int direction;
+		private final boolean keyDown;
 
 		public MoveAction(int direction, boolean down) {
 		    this.direction = direction;
@@ -130,14 +116,7 @@ public class PlayRunner extends JPanel implements ActionListener
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-		    xDelta = direction;
-		    if (keyDown) {
-		        if (!repaintTimer.isRunning()) {
-		            repaintTimer.start();
-		        }
-		    } else {
-		        repaintTimer.stop();
-		    }
+		    xDelta = keyDown ? direction : 0;
 		}
 	}
 
@@ -207,7 +186,8 @@ public class PlayRunner extends JPanel implements ActionListener
         newStage = false;
         stageDelay = 0;
         aMan.update();
-        aMan.checkHit(playerShip.getBullet());
+        for(Projectile b : playerShip.getBullets())
+          aMan.checkHit(b);
       }
 
       if(playerShip.isAlive())
@@ -219,9 +199,10 @@ public class PlayRunner extends JPanel implements ActionListener
       {
         if(!nameInputted)
         {
-          String name = JOptionPane.showInputDialog("Enter Name");
-          aMan.saveScore(name);
           nameInputted = true;
+          String name = JOptionPane.showInputDialog("Enter Name");
+          if (name == null || name.isBlank()) name = "Unknown";
+          aMan.saveScore(name);
         }
         restart.setVisible(true);
       }
@@ -241,7 +222,7 @@ public class PlayRunner extends JPanel implements ActionListener
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(200, 200);
+		return screenSize;
 	}
 
 	@Override

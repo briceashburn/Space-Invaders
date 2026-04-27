@@ -1,5 +1,5 @@
 /*
- * Author: Tanner Coker
+ * Author: Brice Ashburn
  * 
  * Stars class is a class that will display small white squares (stars) on the background class.
  * They will move downward across the screen constantly so that it simulates movement in space.
@@ -8,21 +8,24 @@
  * and movement.
  */
 
-import javax.swing.*;
+package SpaceAdventure3398;
+
 import java.awt.*;
-import java.util.*;
 
 public class Stars extends Rectangle implements SpaceBodies
 {
 	
-	//x,y location. speed. size. background width(in progress)
+	//x,y location. speed. size. background width and height
 	private int posX, posY, spd, size, BgWidth;
+	private final int BgHeight;
 	
 	public Stars()
 	{
-		BgWidth = 1936;
-		posX = (int)(Math.random()*1936);
-		posY = (int)(Math.random()*1500);
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		BgWidth = screen.width;
+		BgHeight = screen.height;
+		posX = (int)(Math.random()*BgWidth);
+		posY = (int)(Math.random()*BgHeight);
 		size = (int)(Math.random()*3+1);
 		if(size < 3)
 			spd = (int)(Math.random()*1+1);
@@ -34,12 +37,12 @@ public class Stars extends Rectangle implements SpaceBodies
 	
 	//checks to see if the star has gone off screen. If so then it recycles it
 	//and moves it back to the top to keep a continuous stream of stars.
-	@SuppressWarnings("deprecation")
+	@Override
 	public void update()
 	{
-		if(posY >= 1500)
+		if(posY >= BgHeight)
 		{
-			posX = (int)(Math.random()*1936);
+			posX = (int)(Math.random()*BgWidth);
 			posY = 0;
 			size = (int)(Math.random()*3+1);
 			if(size < 3)
@@ -53,12 +56,14 @@ public class Stars extends Rectangle implements SpaceBodies
 	}
 	
 	//sets the width of the background/frame that it is on to set an upper bound on which the stars spawn
+	@Override
 	public void setFrameWidth(int w)
 	{
 		BgWidth = w;
 	}
 	
 	//draws the star based on it's location and size
+	@Override
 	public void draw(Graphics g)
 	{
         g.setColor(Color.white);

@@ -1,10 +1,9 @@
-
+package SpaceAdventure3398;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
-import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -18,7 +17,7 @@ public class Scoreboard
 	private final int numberOfScores = 10; // only keeping top 10 scores
 	private List<ScoreLine> topScores;
 
-	static String fileSep = System.getProperty("file.separator");
+	static final String fileSep = System.getProperty("file.separator");
 	// FOr now, the file that stores the top scores is stored in the main directory
 	private static String filePath = "." + fileSep + "topScores.txt";
 
@@ -64,22 +63,25 @@ public class Scoreboard
 				String text = readFile.nextLine();
 				if(text.length() > 0)
 				{
-					String[] tokens = text.split("\\s+");
-					topScores.add( new ScoreLine( Integer.parseInt(tokens[0]), tokens[1]) );
-					++n;
+					try {
+						String[] tokens = text.split("\\s+");
+						topScores.add( new ScoreLine( Long.parseLong(tokens[0]), tokens[1]) );
+						++n;
+					} catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
+						// skip malformed lines
+					}
 				}
 			}
-			while ( n < numberOfScores ) 
-			{
-				topScores.add( new ScoreLine(0, "------") );
-				++n;
-			}
-		
 			readFile.close();
 		}
 		catch(IOException e)
 		{
 			System.out.println(e);
+		}
+		while ( n < numberOfScores ) 
+		{
+			topScores.add( new ScoreLine(0, "------") );
+			++n;
 		}
 	}
 

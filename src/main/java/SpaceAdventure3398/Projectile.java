@@ -1,15 +1,24 @@
-import javax.swing.*;
+package SpaceAdventure3398;
+
 import java.awt.*;
 
 public class Projectile extends Rectangle
 {
+  private static Dimension getScreenSizeSafe() {
+    try {
+      return Toolkit.getDefaultToolkit().getScreenSize();
+    } catch (java.awt.HeadlessException e) {
+      return new Dimension(1920, 1080);
+    }
+  }
 
-  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  int ScreenWidth = screenSize.width;
-  int ScreenHeight = screenSize.height;
-  int locx, locy, myWidth, myHeight, speed, owner;//1 = alien, 2 = player
+  final Dimension screenSize = getScreenSizeSafe();
+  final int ScreenWidth = screenSize.width;
+  final int ScreenHeight = screenSize.height;
+  int locx, locy;
+  final int myWidth, myHeight, speed, owner;//1 = alien, 2 = player
   int damage;
-  Rectangle pBox;
+  final Rectangle pBox;
 
   //pass either a 1 or 2 to the class to control the direction that the bullet travels in
   //this will make it go up if it's from a player and down if it's from an alien

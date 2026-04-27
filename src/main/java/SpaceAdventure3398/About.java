@@ -1,37 +1,37 @@
 /*
-  Author: Tanner Coker
+  Author: Brice Ashburn
 
   This class will display the about panel of the game. It will show details of the game such as who made it.
 */
+
+package SpaceAdventure3398;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.imageio.ImageIO;
-import java.util.*;
-import java.io.*;
 
 public class About extends JPanel implements ActionListener
 {
-  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  int width = screenSize.width;
-  int height = screenSize.height;
+  final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+  final int width = screenSize.width;
+  final int height = screenSize.height;
   private BufferedImage background,panelTitle;
-  private ScreenManager manager;
+  private final ScreenManager manager;
   private JButton back;//back button
   ImageIcon backPic;
 
   public About(ScreenManager manager)
   {
     this.manager = manager;
-    backPic = new ImageIcon("src/main/java/SpaceAdventure3398/images/Back.png");
+    backPic = new ImageIcon(getClass().getResource("/images/Back.png"));
 
     //tries to get the images
     try
     {
-      background = ImageIO.read(new File("src/main/java/SpaceAdventure3398/images/stillBackground.png"));
-      panelTitle = ImageIO.read(new File("src/main/java/SpaceAdventure3398/images/About_title.png"));
+      background = ImageIO.read(getClass().getResource("/images/stillBackground.png"));
+      panelTitle = ImageIO.read(getClass().getResource("/images/About_title.png"));
     }
     catch(Exception e)
     {

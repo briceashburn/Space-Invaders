@@ -1,8 +1,10 @@
 /*
-  Author: Tanner Coker
+  Author: Brice Ashburn
 
   This class will display the settings panel and it's various settings.
 */
+
+package SpaceAdventure3398;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,16 +12,15 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.util.*;
-import java.io.*;
 import javax.swing.event.*; // ChangeListener
 
 public class Settings extends JPanel implements ActionListener, ItemListener
 {
-  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  int width = screenSize.width;
-  int height = screenSize.height;
+  final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+  final int width = screenSize.width;
+  final int height = screenSize.height;
   private BufferedImage background,panelTitle;
-  private ScreenManager manager;//screen manager
+  private final ScreenManager manager;//screen manager
   private JButton back;//back button
   ImageIcon backPic;
 
@@ -31,14 +32,14 @@ public class Settings extends JPanel implements ActionListener, ItemListener
   public Settings(ScreenManager manager)
   {
     this.manager = manager;
-    backPic = new ImageIcon("src/main/java/SpaceAdventure3398/images/Back.png");
+    backPic = new ImageIcon(getClass().getResource("/images/Back.png"));
 
 
     //tries to get the buffered images
     try
     {
-      background = ImageIO.read(new File("src/main/java/SpaceAdventure3398/images/stillBackground.png"));
-      panelTitle = ImageIO.read(new File("src/main/java/SpaceAdventure3398/images/Settings_title.png"));
+      background = ImageIO.read(getClass().getResource("/images/stillBackground.png"));
+      panelTitle = ImageIO.read(getClass().getResource("/images/Settings_title.png"));
     }
     catch(Exception e)
     {
@@ -81,19 +82,19 @@ public class Settings extends JPanel implements ActionListener, ItemListener
 	  Hashtable<Integer, JComponent> table = new Hashtable<Integer, JComponent>();
 	  label = new JLabel("0");
 	  label.setForeground( new Color(51, 150, 255) );
-    table.put(new Integer(0), label);
+    table.put(0, label);
 	  label = new JLabel("5");
 	  label.setForeground( new Color(51, 150, 255) );
-    table.put(new Integer(5), label);
+    table.put(5, label);
 	  label = new JLabel("10");
 	  label.setForeground( new Color(51, 150, 255) );
-    table.put(new Integer(10), label);
+    table.put(10, label);
 	  label = new JLabel("15");
 	  label.setForeground( new Color(51, 150, 255) );
-    table.put(new Integer(15), label);
+    table.put(15, label);
 	  label = new JLabel("20");
 	  label.setForeground( new Color(51, 150, 255) );
-    table.put(new Integer(20), label);
+    table.put(20, label);
 	  diff.setLabelTable(table);
 
 	  diff.addChangeListener( new ChangeListener()
