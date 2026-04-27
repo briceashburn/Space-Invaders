@@ -1,26 +1,25 @@
 /*
-  Author: Tanner Coker
+  Author: Brice Ashburn
 
   This class will manage which screen is currently being displayed for the game.
 */
 
+package SpaceAdventure3398;
+
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import javax.swing.*;
-import javax.imageio.ImageIO;
-import java.util.*;
 
 public class ScreenManager
 {
-  JFrame frame = new JFrame();
-  JPanel container = new JPanel();
-  MainMenu menu = new MainMenu(this);
-  ScoreBoardDisplay sDisp = new ScoreBoardDisplay(this);
-  Settings setDisp = new Settings(this);
-  PlayRunner pRun = new PlayRunner(this);
-  About abDisp = new About(this);
-  CardLayout cl = new CardLayout();
+  final JFrame frame = new JFrame();
+  final JPanel container = new JPanel();
+  final MainMenu menu = new MainMenu(this);
+  final ScoreBoardDisplay sDisp = new ScoreBoardDisplay(this);
+  final Settings setDisp = new Settings(this);
+  final PlayRunner pRun = new PlayRunner(this);
+  final About abDisp = new About(this);
+  final CardLayout cl = new CardLayout();
+  private boolean isFullScreen = false;
 
 
   public ScreenManager()
@@ -41,12 +40,10 @@ public class ScreenManager
     container.add(abDisp, "5");
     cl.show(container, "1");
 
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //frame.setUndecorated(true);
-		frame.pack();
     frame.add(container);
-		frame.setVisible(true);
+		frame.pack();
+		makeFullScreen();
 	}
 
   public int accessDifficultySetting()
@@ -89,40 +86,35 @@ public class ScreenManager
   //makes the game frame full screen
   public void makeFullScreen()
   {
+    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     frame.setVisible(false);
     frame.dispose();
     frame.setUndecorated(true);
-    //frame.setFullScreenWindow(this);
-    frame.setVisible(true);
+    if (gd.isFullScreenSupported()) {
+      gd.setFullScreenWindow(frame);
+    } else {
+      frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+      frame.setVisible(true);
+    }
+    isFullScreen = true;
   }
 
   //makes the game frame go to a windowed view
   public void stopFullScreen()
   {
+    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    gd.setFullScreenWindow(null);
     frame.setVisible(false);
     frame.dispose();
     frame.setUndecorated(false);
+    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
     frame.setVisible(true);
+    isFullScreen = false;
   }
 
-  //attempt at merging the two fullscreen methods above.
-  //will go to fullscreen but unable to return to windowed
-  /*public void setFullScreen(boolean set)
+  public boolean isFullScreen()
   {
-    if(true)
-    {
-      frame.setVisible(false);
-      frame.dispose();
-      frame.setUndecorated(true);
-      frame.setVisible(true);
-    }
-    else if(false)
-    {
-      frame.setVisible(false);
-      frame.dispose();
-      frame.setUndecorated(false);
-      frame.setVisible(true);
-    }
-  }*/
+    return isFullScreen;
+  }
 
 }

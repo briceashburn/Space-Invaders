@@ -4,27 +4,35 @@ and it will check if anyone of them has hit the screen bounds and will call on t
 play panel. It can also return if there are no aliens and it should be able to check if any of the aliens were shot by a bullet.
 */
 
+package SpaceAdventure3398;
+
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;
 
 public class EnemyManager
 {
-  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  int sWidth = screenSize.width;
-  int sHeight = screenSize.height;
-  ArrayList<Alien> aliens;
-  ArrayList<Projectile> alienBullets;
-  ImageIcon alienPic;
-  Scoreboard playerScore;
-  boolean makeFaster = false;
+  private static Dimension getScreenSizeSafe() {
+    try {
+      return Toolkit.getDefaultToolkit().getScreenSize();
+    } catch (java.awt.HeadlessException e) {
+      return new Dimension(1920, 1080);
+    }
+  }
 
-  Rectangle b1 = new Rectangle(70, -70, 7,10);
+  final Dimension screenSize = getScreenSizeSafe();
+  final int sWidth = screenSize.width;
+  final int sHeight = screenSize.height;
+  final ArrayList<Alien> aliens;
+  final ArrayList<Projectile> alienBullets;
+  final ImageIcon alienPic;
+  final Scoreboard playerScore;
+  boolean makeFaster = false;
 
   //constructor
   public EnemyManager()
   {
-    alienPic = new ImageIcon("./src/main/java/SpaceAdventure3398/images/EnemyShip.png");
+    alienPic = new ImageIcon(getClass().getResource("/images/EnemyShip.png"));
     aliens = new ArrayList<Alien>();
     alienBullets = new ArrayList<Projectile>();
     playerScore = new Scoreboard();
@@ -64,9 +72,7 @@ public class EnemyManager
   //can be used to determine if there are anymore aliens
   public boolean noAliens()
   {
-    if(aliens.isEmpty())
-      return true;
-    return false;
+    return aliens.isEmpty();
   }
 
   //determine if any of the aliens has reached either the left or right side of the screen.

@@ -1,24 +1,28 @@
+package SpaceAdventure3398;
+
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import javax.swing.*;
 import java.util.*;
-import java.io.*;
 
 public class Player extends Rectangle
 {
-  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  int width = screenSize.width;
-  int height = screenSize.height;
+  private static Dimension getScreenSizeSafe() {
+    try {
+      return Toolkit.getDefaultToolkit().getScreenSize();
+    } catch (java.awt.HeadlessException e) {
+      return new Dimension(1920, 1080);
+    }
+  }
+
+  final Dimension screenSize = getScreenSizeSafe();
+  final int width = screenSize.width;
+  final int height = screenSize.height;
   ImageIcon picture;
   boolean alive;
   int locX, locY, speed, myWidth, myHeight;
   ArrayList<Projectile> bullets;
-  Projectile bullet;
   private int health;
-  private Rectangle hitbox;
-
-  boolean shot = false;
+  private final Rectangle hitbox;
 
   public Player(int x, int y)
   {
@@ -26,7 +30,6 @@ public class Player extends Rectangle
     locY = y;
     speed = 0;
     bullets = new ArrayList<Projectile>();
-    bullet = new Projectile(2);
     alive = true;
     health = 100;
     hitbox = new Rectangle(70,-70,50,50);
@@ -39,14 +42,14 @@ public class Player extends Rectangle
 
   public void kill()
   {
-    locX = 0-picture.getIconWidth();
-    locY = 0-picture.getIconHeight();
+    locX = (picture != null) ? 0-picture.getIconWidth() : -50;
+    locY = (picture != null) ? 0-picture.getIconHeight() : -50;
     alive = false;
   }
 
   public void revive()
   {
-    locX = width/2-(picture.getIconWidth()/2);
+    locX = (picture != null) ? width/2-(picture.getIconWidth()/2) : width/2;
     locY = (int)(height*.8);
     health = 100;
     alive = true;
@@ -54,40 +57,18 @@ public class Player extends Rectangle
 
   public void shoot()
   {
-    //bullets.add(new Projectile(2));
-    //bullets.get(bullets.size()-1).setLoc(locX+(picture.getIconWidth()/2), locY-5);
-    if(!shot)
-    {
-      bullet.setLoc(locX+(picture.getIconWidth()/2),locY-5);
-      shot = true;
-    }
-
+    int offsetX = (picture != null) ? picture.getIconWidth()/2 : 25;
+    Projectile b = new Projectile(2);
+    b.setLoc(locX + offsetX, locY - 5);
+    bullets.add(b);
   }
 
   public void update()
   {
-    int counter = 0;
     locX += speed;
     hitbox.move(locX,locY);
-    /*while(counter != bullets.size())
-    {
-      if(bullets.get(counter).hitBound())
-        bullets.remove(counter);
-      else
-      {
-        bullets.get(counter).update();
-        counter++;
-      }
-    }*/
-    if(shot)
-    {
-      bullet.update();
-      if(bullet.getYCoord() <= 0)
-      {
-        bullet.setLoc(0,-15);
-        shot = false;
-      }
-    }
+    bullets.forEach(Projectile::update);
+    bullets.removeIf(Projectile::hitBound);
     if(health <= 0)
     {
       kill();
@@ -117,11 +98,6 @@ public class Player extends Rectangle
   	locX = x;
   }
 
-  public Projectile getBullet()
-  {
-    return bullet;
-  }
-
   public ArrayList<Projectile> getBullets()
   {
     return bullets;
@@ -139,14 +115,12 @@ public class Player extends Rectangle
       if(picture != null)
       {
         g.drawImage(picture.getImage(),locX,locY,50,50,c);
-        bullet.draw(g,c);
+        for(Projectile b : bullets)
+          b.draw(g,c);
         g.setColor(Color.red);
         g.fillRect(150,height-80,health*2,20);
         g.setFont(new Font("Courier",Font.BOLD, 25));
         g.drawString("Health: ",20,height-60);
-
-        //for(Projectile b : bullets)
-        //  b.draw(g,c);
       }
       else
       {

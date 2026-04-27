@@ -1,12 +1,12 @@
 /*
- * Author: Tanner Coker
+ * Author: Brice Ashburn
  *
  * This class is will start the running of the game and is what kicks everything off.
  */
 
-import java.util.*;
+package SpaceAdventure3398;
+
 import javax.swing.*;
-import java.awt.*;
 
 public class GameRunner
 {

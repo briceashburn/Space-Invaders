@@ -6,28 +6,36 @@
   then it should die.
 */
 
+package SpaceAdventure3398;
+
 import javax.swing.*;
 import java.util.*;
-import java.awt.image.BufferedImage;
 import java.awt.*;
-import javax.imageio.ImageIO;
 
 public class Alien extends Rectangle
 {
-  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  int width = screenSize.width;
-  int height = screenSize.height;
+  private static Dimension getScreenSizeSafe() {
+    try {
+      return Toolkit.getDefaultToolkit().getScreenSize();
+    } catch (java.awt.HeadlessException e) {
+      return new Dimension(1920, 1080);
+    }
+  }
+
+  final Dimension screenSize = getScreenSizeSafe();
+  final int screenWidth = screenSize.width;
+  final int screenHeight = screenSize.height;
   ImageIcon picture;
 	boolean alive, shot;
-  int locX, locY, speedX, speedY, counter, rand;
-  Random dice;
-  Projectile bullet;
+  int locX, locY, speedX, rand;
+  final Random dice;
+  final Projectile bullet;
 
   AlienMovementType movement;
 
   int direction = 1;
 
-  private Rectangle al = new Rectangle(-70,-70,50,50);
+  private final Rectangle al = new Rectangle(-70,-70,50,50);
 
   public Alien(int x, int y,ImageIcon pic)
   {
@@ -66,7 +74,7 @@ public class Alien extends Rectangle
 	// check if the ship has reached end of screen left or right
 	boolean reachedScreenBounds()
 	{
-		return (locX > width-picture.getIconWidth() || locX < 0 );  //explain
+		return (locX > screenWidth-picture.getIconWidth() || locX < 0 );  //explain
 	}
 
 	void reverseDirection()
@@ -77,7 +85,7 @@ public class Alien extends Rectangle
 	public void update()
 	{
 		locX += movement.move( speedX, direction );
-    	al.move(locX,locY);
+    	al.setLocation(locX,locY);
 
 		rand = dice.nextInt(200);
 
@@ -93,7 +101,7 @@ public class Alien extends Rectangle
 			if(shot)
 			{
 				bullet.update();
-				if(bullet.getYCoord() >= height-10)
+				if(bullet.getYCoord() >= screenHeight-10)
 				{
 					bullet.setLoc(0,-15);
 	  				shot = false;
@@ -116,9 +124,7 @@ public class Alien extends Rectangle
 
   public boolean gotHit(Rectangle r)
   {
-    if(al.intersects(r) || r.intersects(al))
-      return true;
-    return false;
+    return al.intersects(r) || r.intersects(al);
   }
 
   public Projectile getBullet()

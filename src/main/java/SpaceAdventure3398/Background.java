@@ -1,28 +1,31 @@
 /*
- * Author: Tanner Coker
+ * Author: Brice Ashburn
  *
  * Background is a background that will display a black square on which everything else will
  * lay on top of. It currently has a UpdateThread that will update the location of all of the
  * stars and planets on it.
  */
 
+package SpaceAdventure3398;
+
 import javax.swing.*;
 import java.util.*;
 import java.awt.*;
-import java.io.*;
 
 public class Background extends JPanel
 {
-	private int width = JFrame.MAXIMIZED_HORIZ;
-	private int height = JFrame.MAXIMIZED_VERT;
-	private int frameWidth;
-	private ArrayList<SpaceBodies> bodies = new ArrayList<SpaceBodies>();
+	private final int width;
+	private final int height;
+	private final ArrayList<SpaceBodies> bodies = new ArrayList<SpaceBodies>();
 
 
 	//adds stars and planets to an arraylist of type SpaceBodies
 	//also makes a UpdateThread that will call Update()
 	public Background()
 	{
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		width = screen.width;
+		height = screen.height;
 
 		//changes the amount of stars
 		for(int i=0;i<500;i++)
