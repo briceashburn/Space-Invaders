@@ -19,6 +19,7 @@ public class ScreenManager
   final PlayRunner pRun = new PlayRunner(this);
   final About abDisp = new About(this);
   final CardLayout cl = new CardLayout();
+  private boolean isFullScreen = false;
 
 
   public ScreenManager()
@@ -40,8 +41,8 @@ public class ScreenManager
     cl.show(container, "1");
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
     frame.add(container);
+		frame.pack();
 		makeFullScreen();
 	}
 
@@ -95,6 +96,7 @@ public class ScreenManager
       frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
       frame.setVisible(true);
     }
+    isFullScreen = true;
   }
 
   //makes the game frame go to a windowed view
@@ -107,6 +109,12 @@ public class ScreenManager
     frame.setUndecorated(false);
     frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
     frame.setVisible(true);
+    isFullScreen = false;
+  }
+
+  public boolean isFullScreen()
+  {
+    return isFullScreen;
   }
 
 }

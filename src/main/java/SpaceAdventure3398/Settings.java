@@ -123,6 +123,7 @@ public class Settings extends JPanel implements ActionListener, ItemListener
 
 
     fullscreen = new Checkbox();
+    fullscreen.setState(true); // game launches in fullscreen by default
     fullscreen.setBounds(500,380,18,20);
 	  fullscreen.setBackground( new Color(51, 150, 255) );
     fullscreen.addItemListener(this);
@@ -137,11 +138,13 @@ public class Settings extends JPanel implements ActionListener, ItemListener
 
   public void itemStateChanged(ItemEvent e)
   {
-    if(e.getSource() == fullscreen)
-      if(e.getStateChange() == 1)
+    if(e.getSource() == fullscreen) {
+      boolean wantsFullScreen = (e.getStateChange() == ItemEvent.SELECTED);
+      if (wantsFullScreen && !manager.isFullScreen())
         manager.makeFullScreen();
-      else
+      else if (!wantsFullScreen && manager.isFullScreen())
         manager.stopFullScreen();
+    }
   }
 
   //makes the back button return to the menu
